@@ -1,6 +1,6 @@
 import Cell from './Cell';
 
-function GameBoard({ board, ghosts }) {
+function GameBoard({ board }) {
   return (
     <section className="game-board" aria-label="Pacman game board">
       {board.grid.map((row, rowIndex) =>
@@ -9,7 +9,6 @@ function GameBoard({ board, ghosts }) {
             key={`${rowIndex}-${colIndex}`}
             cell={cell}
             pacman={board.pacman}
-            isGhost={ghosts.some((ghost) => ghost.row === rowIndex && ghost.col === colIndex)}
           />
         )),
       )}
