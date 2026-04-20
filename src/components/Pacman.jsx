@@ -1,5 +1,5 @@
-function Pacman() {
-  return <span className="pacman" aria-label="Pacman" />;
+function Pacman({ direction = 'right' }) {
+  return <span className={`pacman ${direction}`} aria-label="Pacman" />;
 }
 
 export default Pacman;
