@@ -5,9 +5,6 @@ function Cell({ cell, pacman }) {
 
   return (
     <div className={`cell ${cell.isWall ? 'wall' : 'path'}`}>
-      {!cell.isWall && cell.hasDot && !hasPacman ? (
-        <span className="dot" aria-hidden="true" />
-      ) : null}
       {hasPacman ? <Pacman /> : null}
     </div>
   );

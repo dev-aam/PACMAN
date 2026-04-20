@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 const ROWS = 13;
 const COLS = 13;
@@ -36,24 +36,18 @@ const isWall = (row, col) => {
 
 const createBoard = () =>
   Array.from({ length: ROWS }, (_, row) =>
-    Array.from({ length: COLS }, (_, col) => {
-      const wall = isWall(row, col);
-
-      return {
-        row,
-        col,
-        isWall: wall,
-        hasDot: !wall,
-      };
-    }),
+    Array.from({ length: COLS }, (_, col) => ({
+      row,
+      col,
+      isWall: isWall(row, col),
+    })),
   );
 
 export const usePacmanGame = () => {
-  const [gameState, setGameState] = useState(() => ({
-    pacman: CENTER,
-    score: 0,
-    grid: createBoard(),
-  }));
+  const [score] = useState(0);
+  const [pacmanPosition, setPacmanPosition] = useState(CENTER);
+
+  const grid = useMemo(() => createBoard(), []);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -64,27 +58,17 @@ export const usePacmanGame = () => {
 
       const { deltaRow, deltaCol } = direction;
 
-      setGameState((prev) => {
-        const nextRow = prev.pacman.row + deltaRow;
-        const nextCol = prev.pacman.col + deltaCol;
+      setPacmanPosition((prev) => {
+        const nextRow = prev.row + deltaRow;
+        const nextCol = prev.col + deltaCol;
 
         if (isWall(nextRow, nextCol)) {
           return prev;
         }
 
-        const targetCell = prev.grid[nextRow][nextCol];
-        const ateDot = targetCell.hasDot;
-
-        let nextGrid = prev.grid;
-        if (ateDot) {
-          nextGrid = prev.grid.map((row) => row.map((cell) => ({ ...cell })));
-          nextGrid[nextRow][nextCol].hasDot = false;
-        }
-
         return {
-          pacman: { row: nextRow, col: nextCol },
-          score: ateDot ? prev.score + 10 : prev.score,
-          grid: nextGrid,
+          row: prev.row + deltaRow,
+          col: prev.col + deltaCol,
         };
       });
     };
@@ -97,10 +81,10 @@ export const usePacmanGame = () => {
   }, []);
 
   return {
-    score: gameState.score,
+    score,
     board: {
-      grid: gameState.grid,
-      pacman: gameState.pacman,
+      grid,
+      pacman: pacmanPosition,
     },
   };
 };

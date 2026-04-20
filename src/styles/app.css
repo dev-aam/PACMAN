@@ -45,13 +45,6 @@
   background-color: #0b1220;
 }
 
-.dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f8fafc;
-}
-
 .pacman {
   width: 18px;
   height: 18px;
